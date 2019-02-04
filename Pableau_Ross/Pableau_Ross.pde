@@ -1,9 +1,10 @@
 import processing.video.*;
 
 Capture cam;
+DessinApplet dessin;
 
 // Settings
-boolean debugMode = false;
+boolean debugMode = true;
 
 // A variable for the color we are searching for.
 color trackColor;
@@ -24,12 +25,16 @@ void setup() {
     
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, cameras[0]);
+    cam = new Capture(this, cameras[3]);
     cam.start(); 
     // Start off tracking for red
     trackColor = color(255, 0, 0);
     
   }
+  
+  String[] args = {"Dessin"};
+  DessinApplet dessin = new DessinApplet();
+  PApplet.runSketch(args, dessin);
 }
 
 void draw() {
@@ -100,7 +105,7 @@ void draw() {
   }
   // We only consider the color found if its color distance is less than 10. 
   // This threshold of 10 is arbitrary and you can adjust this number depending on how accurate you require the tracking to be.
-  if (worldRecord < 200) { 
+  if (worldRecord < 200) {
     // Draw a circle at the tracked pixel
     fill(trackColor);
     strokeWeight(4.0);
@@ -165,6 +170,8 @@ void draw() {
         inputDirection = 3;
       }
     }
+    
+    DessinApplet.control(inputDirection);
     
     System.out.println("Input Direction: " + inputDirection);
   }
