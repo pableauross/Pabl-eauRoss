@@ -2,6 +2,9 @@ import processing.video.*;
 
 Capture cam;
 
+// Settings
+boolean debugMode = false;
+
 // A variable for the color we are searching for.
 color trackColor;
 
@@ -26,17 +29,16 @@ void setup() {
     // Start off tracking for red
     trackColor = color(255, 0, 0);
     
-    
-  }      
+  }
 }
 
 void draw() {
   if (cam.available() == true) {
     cam.read();
   }
-    image(cam, 0, 0);
+  image(cam, 0, 0);
     
-   // Before we begin searching, the "world record" for closest color is set to a high number that is easy for the first pixel to beat.
+  // Before we begin searching, the "world record" for closest color is set to a high number that is easy for the first pixel to beat.
   float worldRecord = 200; 
 
   // XY coordinate of closest color
@@ -93,7 +95,7 @@ void draw() {
         worldRecord = d;
         closestLeftX = x;
         closestLeftY = y;
-              }
+      }
     }
   }
   // We only consider the color found if its color distance is less than 10. 
@@ -103,8 +105,10 @@ void draw() {
     fill(trackColor);
     strokeWeight(4.0);
     stroke(0);
-    ellipse(closestRightX, closestRightY, 16, 16);
-    ellipse(closestLeftX, closestLeftY, 16, 16);
+    if (debugMode) {
+      ellipse(closestRightX, closestRightY, 16, 16);
+      ellipse(closestLeftX, closestLeftY, 16, 16);
+    }    
     
     System.out.println("Position Droite");
     System.out.println("X: "+closestLeftX + "Y: "+closestLeftY);
