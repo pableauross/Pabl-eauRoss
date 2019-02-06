@@ -1,6 +1,6 @@
-import processing.video.*;
+import gohai.glvideo.*;
+GLCapture cam;
 
-Capture cam;
 DessinApplet dessin;
 
 // Settings
@@ -10,9 +10,9 @@ boolean debugMode = true;
 color trackColor;
 
 void setup() {
-  size(640, 480);
+  size(640, 480, P2D);
 
-  String[] cameras = Capture.list();
+  String[] cameras = GLCapture.list();
   
   if (cameras.length == 0) {
     println("There are no cameras available for capture.");
@@ -25,7 +25,7 @@ void setup() {
     
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, cameras[3]);
+    cam = new GLCapture(this, cameras[0]);
     cam.start(); 
     // Start off tracking for red
     trackColor = color(255, 0, 0);
@@ -52,7 +52,7 @@ void draw() {
   int leftPartEnd = cam.width/2;
   int closestLeftX = 0;
   int closestLeftY = 0;
-
+  cam.loadPixels();
   // Begin loop to walk through every pixel
   for (int x = 0; x < leftPartEnd; x ++ ) {
     for (int y = 0; y < cam.height; y ++ ) {
