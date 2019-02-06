@@ -3,18 +3,18 @@ GLCapture cam;
 
 DessinApplet dessin;
 
-Capture cam;
 PImage backgroundImg;
 
 // Settings
-boolean debugMode = false;
+boolean debugMode = true;
+float framerate = 5;
 
 // A variable for the color we are searching for.
 color trackColor;
 
 void setup() {
   size(640, 480, P2D);
-  frameRate(15);
+  frameRate(framerate);
 
   colorMode(HSB, 360, 100, 100);
 
@@ -34,7 +34,7 @@ void setup() {
 
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new GLCapture(this, cameras[0]);
+    cam = new GLCapture(this, cameras[0], 640, 480);
     cam.start();
 
     // Background images
@@ -49,11 +49,7 @@ void setup() {
 }
 
 void settings() {
-  size(640, 480);
-}
-
-void captureEvent(Capture cam) {
-  cam.read();
+  size(640, 480, P2D);
 }
 
 void drawGreenBackground() { //<>//
@@ -81,6 +77,10 @@ void drawGreenBackground() { //<>//
 
 
 void draw() {
+
+  if (cam.available()) {
+    cam.read();
+  }
 
   // Before we begin searching, the "world record" for closest color is set to a high number that is easy for the first pixel to beat.
   float worldRecord = 200; 
