@@ -13,28 +13,33 @@ void setup() {
   size(640, 480);
 
   String[] cameras = Capture.list();
-  
+
   if (cameras.length == 0) {
+
     println("There are no cameras available for capture.");
     exit();
   } else {
+
     println("Available cameras:");
     for (int i = 0; i < cameras.length; i++) {
       println(cameras[i]);
     }
-    
+
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, cameras[3]);
+    cam = new Capture(this, cameras[9]);
     cam.start(); 
+
     // Start off tracking for red
     trackColor = color(255, 0, 0);
-    
   }
-  
-  String[] args = {"Dessin"};
-  DessinApplet dessin = new DessinApplet();
-  PApplet.runSketch(args, dessin);
+
+  // Run draw window
+  this.dessin = new DessinApplet();
+}
+
+void settings() {
+  size(640, 480);
 }
 
 void draw() {
@@ -42,7 +47,7 @@ void draw() {
     cam.read();
   }
   image(cam, 0, 0);
-    
+
   // Before we begin searching, the "world record" for closest color is set to a high number that is easy for the first pixel to beat.
   float worldRecord = 200; 
 
@@ -52,6 +57,10 @@ void draw() {
   int leftPartEnd = cam.width/2;
   int closestLeftX = 0;
   int closestLeftY = 0;
+
+  if (debugMode) {
+    line(leftPartEnd, 0, leftPartEnd, cam.height);
+  }
 
   // Begin loop to walk through every pixel
   for (int x = 0; x < leftPartEnd; x ++ ) {
@@ -103,6 +112,7 @@ void draw() {
       }
     }
   }
+
   // We only consider the color found if its color distance is less than 10. 
   // This threshold of 10 is arbitrary and you can adjust this number depending on how accurate you require the tracking to be.
   if (worldRecord < 200) {
@@ -110,69 +120,52 @@ void draw() {
     fill(trackColor);
     strokeWeight(4.0);
     stroke(0);
+
     if (debugMode) {
       ellipse(closestRightX, closestRightY, 16, 16);
       ellipse(closestLeftX, closestLeftY, 16, 16);
-    }    
-    
-    System.out.println("Position Droite");
-    System.out.println("X: "+closestLeftX + "Y: "+closestLeftY);
-    
+    }
+
+    if (debugMode) {
+      System.out.println("Position Droite");
+      System.out.println("closestLeftX: " + closestLeftX + "; closestLeftY: " + closestLeftY);
+      System.out.println("leftPartEnd: " + leftPartEnd);
+      System.out.println("cam.height/3: " + cam.height/3);
+    }
+
     int inputDirection = 0;
     
-    if (closestLeftY < cam.height/3)
-    {
-      if (closestLeftX < leftPartEnd/3 )
-      {
+    int leftArea = leftPartEnd + leftPartEnd / 3;
+    int middleArea = leftPartEnd + (leftPartEnd/3) * 2;
+
+    if (closestLeftY < cam.height/3) {
+      if (closestLeftX < leftArea ) {
         inputDirection = 7;
-      }
-      
-      else if (closestLeftX < (leftPartEnd/3) * 2 )
-      {
+      } else if (closestLeftX < middleArea) {
         inputDirection = 8;
-      }      
-      else
-      {
+      } else {
         inputDirection = 9;
       }
-    }  
-    
-    if (closestLeftY < (cam.height/3)*2)
-    {
-      if (closestLeftX < leftPartEnd/3 )
-      {
+    } else if (closestLeftY < (cam.height/3)*2) {
+      if (closestLeftX < leftArea) {
         inputDirection = 4;
-      }
-      
-      else if (closestLeftX < (leftPartEnd/3) * 2 )
-      {
+      } else if (closestLeftX < middleArea) {
         inputDirection = 5;
-      }      
-      else
-      {
+      } else {
         inputDirection = 6;
       }
-    }
-    
-    else
-    {
-      if (closestLeftX < leftPartEnd/3 )
-      {
+    } else {
+      if (closestLeftX < leftArea) {
         inputDirection = 1;
-      }
-      
-      else if (closestLeftX < (leftPartEnd/3) * 2 )
-      {
+      } else if (closestLeftX < middleArea) {
         inputDirection = 2;
-      }      
-      else
-      {
+      } else {
         inputDirection = 3;
       }
     }
-    
-    DessinApplet.control(inputDirection);
-    
+
+    dessin.control(inputDirection);
+
     System.out.println("Input Direction: " + inputDirection);
   }
 }
