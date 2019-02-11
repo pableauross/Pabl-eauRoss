@@ -124,13 +124,11 @@ void draw() {
     if (debugMode) {
       ellipse(closestRightX, closestRightY, 16, 16);
       ellipse(closestLeftX, closestLeftY, 16, 16);
-    }
-
-    if (debugMode) {
+      
       System.out.println("Position Droite");
       System.out.println("closestLeftX: " + closestLeftX + "; closestLeftY: " + closestLeftY);
       System.out.println("leftPartEnd: " + leftPartEnd);
-      System.out.println("cam.height/3: " + cam.height/3);
+      System.out.println("cam.height: " + cam.height);
     }
 
     int inputDirection = 0;
