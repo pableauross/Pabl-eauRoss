@@ -9,8 +9,11 @@ boolean debugMode = true;
 // A variable for the color we are searching for.
 color trackColor;
 
+int rectSize = 20;
+
 void setup() {
   size(640, 480);
+  colorMode(HSB, 360, 100, 100);
 
   String[] cameras = Capture.list();
 
@@ -28,10 +31,10 @@ void setup() {
     // The camera can be initialized directly using an 
     // element from the array returned by list():
     cam = new Capture(this, cameras[9]);
-    cam.start(); 
+    cam.start();
 
     // Start off tracking for red
-    trackColor = color(255, 0, 0);
+    trackColor = color(0, 194, 113);
   }
 
   // Run draw window
@@ -43,6 +46,7 @@ void settings() {
 }
 
 void draw() {
+  
   if (cam.available() == true) {
     cam.read();
   }
@@ -113,6 +117,15 @@ void draw() {
     }
   }
 
+  drawColorPalette(rectSize);
+
+  color newColor = color(get(closestRightX, closestRightY));
+  
+  fill(newColor);
+  rect(0, 0, 10, 10);
+  
+  println("newColor: " + newColor);
+
   // We only consider the color found if its color distance is less than 10. 
   // This threshold of 10 is arbitrary and you can adjust this number depending on how accurate you require the tracking to be.
   if (worldRecord < 200) {
@@ -124,11 +137,11 @@ void draw() {
     if (debugMode) {
       ellipse(closestRightX, closestRightY, 16, 16);
       ellipse(closestLeftX, closestLeftY, 16, 16);
-      
+      /*
       System.out.println("Position Droite");
       System.out.println("closestLeftX: " + closestLeftX + "; closestLeftY: " + closestLeftY);
       System.out.println("leftPartEnd: " + leftPartEnd);
-      System.out.println("cam.height: " + cam.height);
+      System.out.println("cam.height: " + cam.height);*/
     }
 
     int inputDirection = 0;
@@ -162,8 +175,23 @@ void draw() {
       }
     }
 
-    dessin.control(inputDirection);
+    dessin.control(inputDirection, newColor);
 
     System.out.println("Input Direction: " + inputDirection);
+  }
+}
+
+void drawColorPalette(int rectSize) {
+  colorMode(HSB, width/rectSize, height/rectSize, 255);
+  smooth();
+  int offset = height/4;
+  for(int i = 0; i < width/rectSize ; i++){
+   for(int j = 0; j < height/rectSize ; j++){
+     noStroke();
+     fill(i,j,255);
+     //dibuja cuadrados del tamano definido
+     //agrega variabilidad a la posicion del cuadrado
+     rect(i*rectSize/2, j*rectSize/2 + offset, rectSize/2, rectSize/2);
+   }
   }
 }
