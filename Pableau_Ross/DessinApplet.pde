@@ -1,12 +1,10 @@
 public class DessinApplet extends PApplet {
   
   String s = "test";
-  int epaisseur;
-  int x = 50;
-  int y = 50;
-  int r = 20; // Brush size
-  int deplacementX, deplacementY;
-  int rouge, vert, bleu;
+  int x = 100;
+  int y = 100;
+  int r = 30; // Brush size
+  int speed = 2;
   color brushColor;
   color backgroundColor = color(255, 204, 0);
   
@@ -17,25 +15,13 @@ public class DessinApplet extends PApplet {
 
   void settings() {
     size(640, 420);
-    epaisseur = 6;
-    deplacementX = 1;
-    deplacementY = 1;
-    rouge = 100;
-    vert = 100;
-    bleu = 100;
-    
     smooth();
   }
 
   void draw() {
     fill(brushColor);
     ellipse(x,y,r,r);
-    
-    //rect(200, 200, 168, 72);
-   
-    //fill(353, 95, 73, 100);  
     noStroke();
-
   }
 
   void control(int inputDirection, color myColor) {
@@ -43,38 +29,38 @@ public class DessinApplet extends PApplet {
     brushColor = myColor;
     
     switch (inputDirection) {
-      case 1: x--;
-              y++;
+      case 1: x = x - speed;
+              y = y + speed;
               break;
-      case 2: y++;
+      case 2: y = y + speed;
               break;
-      case 3: x++;
-              y++;
+      case 3: x = x + speed;
+              y = y + speed;
               break;
-      case 4: x--;
+      case 4: x = x - speed;
               break;
-      case 6: x++;
+      case 6: x = x + speed;
               break;
-      case 7: x--;
-              y--;
+      case 7: x = x - speed;
+              y = x - speed;
               break;
-      case 8: y--;
+      case 8: y = y - speed;
               break;
-      case 9: x++;
-              y--;
+      case 9: x = x + speed;
+              y = y - speed;
               break;
     }
     
-    if (x == width) {
-      x--;
-    } else if (x == 0) {
-      x++;
+    if (x > width) {
+      x = width;
+    } else if (x < 0) {
+      x = 0;
     }
     
-    if (y == 0) {
-      y++;
-    } else if (y == height) {
-      y--;
+    if (y < 0) {
+      y = 0;
+    } else if (y > height) {
+      y = height;
     }
   }
 }
